@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Formulário </title>
+    </head>
+    <body>
+        <img src="logo.png" alt="Logo da empresa Conecta Cargo.">
+        <h3>Formulário</h3>
+        <form>
+
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome"><br><br>
+
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input type="date" id="dataNascimento" oninput="calcularIdade()">
+            <p id="idade"></p>
+
+            <label for="cep">CEP</label>
+            <input type="text" id="cep" name="cep">
+            <button type="button" onclick="buscarEndereco()">Buscar</button><br><br>
+
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco"><br><br>
+
+            <label>Salário:</label>
+            <input type="text" id="salario"/> <br><br>
+
+            <button type="button" onclick="alert('Bem vindo a Conecta Cargo!')">Enviar</button>
+
+        </form>
+        <script>
+            function calcularIdade() {
+                var dataNascimento = document.getElementById('dataNascimento').value;
+                var partesData = dataNascimento.split('-');
+                var ano = parseInt(partesData[0], 10);
+                var mes = parseInt(partesData[1], 10) - 1;
+                var dia = parseInt(partesData[2], 10);
+                var dataNascimento = new Date(ano, mes, dia);
+                var dataAtual = new Date();
+                var idade = dataAtual.getFullYear() - dataNascimento.getFullYear();
+
+                if (
+                    dataAtual.getMonth() < dataNascimento.getMonth() ||
+                    (dataAtual.getMonth()=== dataNascimento.getMonth() && dataAtual.getDate() < dataNascimento.getDate())
+                ) {
+                    idade --;
+                }
+                document.getElementById("idade").textContent = + idade + " anos";
+            }
+
+               const salarioInput = document.getElementById('salario');
+               salarioInput.addEventListener('input', function(){
+               const valor = this.value.replace(/\D/g, '');
+               const valorFormatado = `R$ ${valor}`;
+               this.value = valorFormatado;
+            });
+
+            function buscarEndereco() {
+                var cep = document.getElementById("cep").value;
+                var url = "https://viacep.com.br/ws/" + cep + "/json";
+                fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        console.log("CEP não encontrado.");
+                    } else {
+                        document.getElementById("endereco").value = data.logradouro + "," + data.bairro + "-" + data.localidade + "," + data.uf;
+                        highlightField(document.getElementById("endereco"));
+                    }
+                })
+                .catch(error => {
+                    console.log("Erro na buscar do endereco:", error);
+                });
+            }
+            var input = document.querySelector ("input");
+            input.focus();
+        </script>
+    </body>
+    <footer class="rodape">
+        <p>Desenvolvedor: Jaqueline Lira Vargas.  Maio/2023</p>
+    </footer>
+    <style>
+        body{
+            background-color: lightgrey;
+        }
+        button{
+            display: inline-block;
+            background-color: navy;
+            color:white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+            text-decoration: none;
+        }
+        button:hover{
+            background-color: orangered;
+        }
+        img{
+            padding-left: 500px;
+        }
+        h3{
+            padding-left: 600px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        form{
+            padding-left: 500px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        input{
+            background-color: #f2f2f2;
+            color: #333333;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            padding: 7px;
+            height: 10px;
+        }
+        footer{
+            background-color: lightgray;
+            color: gray;
+            padding: 50px;
+            text-align: right;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: x-small;
+        }
+        #salario{
+            width: 65px;
+            padding-right: 20px;
+        }
+        #salario::after{
+            content: "$";
+            position: absolute;
+            top: 50%;
+            right:10px;
+            transform: translateY(-50%);
+        }
+        #endereco{
+            width: 250px;
+        }
+        #cep{
+            width: 100px;
+        }
+
+    </style>
+</html>
