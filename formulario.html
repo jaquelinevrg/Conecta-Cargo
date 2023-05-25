@@ -65,7 +65,7 @@
                         console.log("CEP não encontrado.");
                     } else {
                         document.getElementById("endereco").value = data.logradouro + "," + data.bairro + "-" + data.localidade + "," + data.uf;
-                        highlightField(document.getElementById("endereco"));
+                        (document.getElementById("endereco"));
                     }
                 })
                 .catch(error => {
